@@ -147,3 +147,24 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+
+# Dependências
+node_modules/
+
+# Configurações locais e segredos
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Build e cobertura de testes
+dist/
+build/
+coverage/
+
+# Logs
+*.log
+
+# Arquivos do sistema operacional
+.DS_Store
+Thumbs.db
