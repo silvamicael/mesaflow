@@ -357,19 +357,52 @@ A evolução do esquema é realizada por migrations versionadas. `sync({ force: 
 
 ## 10. Ambiente de desenvolvimento e manutenção do modelo
 
-O ambiente de desenvolvimento utilizará PostgreSQL em um contêiner Docker local, gerenciado por Docker Compose. Não será necessária uma instalação nativa do servidor PostgreSQL no computador. O cliente `psql` poderá ser utilizado dentro do contêiner.
+### 10.1 Ambiente padrão
 
-Os dados serão persistidos em um volume nomeado. A versão da imagem, o mapeamento de porta e as variáveis de ambiente serão definidos no arquivo Compose durante a configuração da infraestrutura. Credenciais reais permanecerão fora do versionamento; exemplos de configuração utilizarão valores fictícios.
+O ambiente de desenvolvimento previsto para o MesaFlow utiliza Node.js para executar o backend e o frontend, e PostgreSQL em um contêiner Docker gerenciado por Docker Compose. Essa organização permite reproduzir a infraestrutura do banco sem instalar o servidor PostgreSQL diretamente no sistema operacional.
 
-O backend utilizará Sequelize para acesso aos dados e migrations para evolução do esquema. A aplicação e seus fluxos serão validados localmente antes da definição da hospedagem em nuvem.
+Os pré-requisitos para colaboradores são:
+
+- Git, para obter e versionar o código-fonte.
+- Node.js e npm, nas versões que serão indicadas no README e nos arquivos de configuração do projeto.
+- Docker Engine com Docker Compose, ou Docker Desktop com suporte a Compose, instalado e em execução.
+- Um editor de código e um navegador web.
+
+O uso de Docker Desktop não é obrigatório quando Docker Engine e Compose já estiverem disponíveis. O ambiente deve ser utilizável em Windows, Linux ou macOS, respeitados os requisitos dessas ferramentas.
+
+### 10.2 Banco de dados e persistência
+
+O PostgreSQL será disponibilizado pelo arquivo Compose versionado no repositório. Esse arquivo definirá a versão da imagem, o serviço de banco, o mapeamento de porta, a verificação de disponibilidade e o volume nomeado destinado à persistência dos dados.
+
+A instalação nativa de PostgreSQL ou do cliente `psql` não será necessária no fluxo padrão. O cliente poderá ser executado dentro do contêiner. Ferramentas gráficas de administração serão opcionais.
+
+O volume preservará os dados entre reinicializações e recriações do contêiner, desde que não seja removido. A persistência em volume não substitui backups. Procedimentos de limpeza que removam volumes deverão indicar explicitamente a perda dos dados locais.
+
+### 10.3 Configuração e execução
+
+Cada colaborador utilizará arquivos locais de variáveis de ambiente, criados a partir dos respectivos `.env.example`. Os exemplos documentarão as variáveis necessárias com valores fictícios; credenciais reais não serão versionadas.
+
+O fluxo de preparação previsto é:
+
+1. Clonar o repositório.
+2. Configurar as variáveis de ambiente a partir dos exemplos.
+3. Iniciar o serviço PostgreSQL com Docker Compose.
+4. Instalar as dependências do backend e do frontend.
+5. Executar as migrations e, opcionalmente, os dados de demonstração.
+6. Iniciar a API e a interface web.
+7. Executar as verificações e os testes documentados.
+
+O backend utilizará Sequelize para acesso aos dados e migrations para evolução do esquema. O ambiente local será validado antes da definição da hospedagem em nuvem.
+
+**Estado atual:** esta seção especifica o ambiente planejado. O arquivo Compose, as versões das ferramentas, as portas, as variáveis e os comandos exatos serão disponibilizados no README após implementação e validação. Este documento não pressupõe que esses arquivos e comandos já estejam presentes no repositório.
+
+### 10.4 Manutenção da modelagem
 
 Este documento registra o modelo lógico inicial. As migrations, os models e os testes deverão manter correspondência com o DER e o dicionário de tabelas. Alterações estruturais exigirão atualização conjunta da documentação.
 
-### Pontos a detalhar na implementação
+Pontos a detalhar na implementação:
 
 - Tipos físicos, índices e restrições nas migrations.
 - Transporte, duração e renovação de sessões.
 - Alocação da taxa de serviço em estornos e regularização de repasses.
 - Validação acadêmica da tabela singleton em relação ao mínimo de registros de demonstração.
-
-O arquivo Compose e os comandos de execução serão documentados no README após sua implementação e validação.
