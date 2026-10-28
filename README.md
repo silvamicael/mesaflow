@@ -87,11 +87,130 @@ incluir credenciais reais.
 
 ## Execução local
 
-Os comandos de instalação, configuração do banco e inicialização serão
-adicionados após a implementação e validação da base de cada aplicação.
+### Pré-requisitos
 
-O desenvolvimento e os testes locais terão prioridade.
-A publicação na nuvem será realizada após a validação dos fluxos completos.
+- Git.
+- Docker Engine com Docker Compose ou Docker Desktop com Compose.
+- Docker em execução.
+
+Node.js e npm serão necessários para o backend e o frontend.
+As versões e os comandos dessas aplicações serão documentados durante
+a implementação.
+
+### Configuração do banco
+
+Na raiz do projeto, crie o arquivo `.env` a partir do exemplo.
+
+No PowerShell:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+No Linux ou macOS:
+
+```bash
+cp .env.example .env
+```
+
+Edite o `.env` e substitua a senha de exemplo por uma senha local.
+O arquivo `.env` não deve ser versionado.
+
+Configuração padrão:
+
+| Parâmetro | Valor |
+| --- | --- |
+| Host para aplicações executadas no computador | `127.0.0.1` |
+| Porta no computador | `5433` |
+| Banco | `mesaflow` |
+| Usuário de desenvolvimento | `mesaflow_dev` |
+| Versão principal do PostgreSQL | `17` |
+
+O serviço é destinado ao desenvolvimento local. Credenciais e permissões
+do ambiente publicado serão configuradas separadamente.
+
+### Inicialização
+
+Valide a configuração:
+
+```bash
+docker compose config --quiet
+```
+
+Inicie o banco e aguarde a verificação de disponibilidade:
+
+```bash
+docker compose up -d --wait
+docker compose ps
+```
+
+O serviço `db` deve apresentar o estado `healthy`.
+
+### Teste de conexão
+
+Com os nomes padrão do `.env.example`:
+
+```bash
+docker compose exec db psql -h 127.0.0.1 -U mesaflow_dev -d mesaflow -W
+```
+
+Informe a senha configurada no `.env` e execute:
+
+```sql
+SELECT current_database(), current_user;
+```
+
+Resultado esperado:
+
+| current_database | current_user |
+| --- | --- |
+| mesaflow | mesaflow_dev |
+
+Para sair do cliente:
+
+```text
+\q
+```
+
+Se o nome do banco ou do usuário tiver sido alterado, ajuste os argumentos
+do comando de conexão.
+
+### Operação do ambiente
+
+```bash
+# Consultar o estado
+docker compose ps
+
+# Consultar logs recentes
+docker compose logs --tail 80 db
+
+# Parar o serviço
+docker compose stop
+
+# Iniciar novamente
+docker compose up -d --wait
+
+# Remover contêiner e rede, preservando os dados
+docker compose down
+```
+
+Os dados ficam em um volume nomeado. O comando `docker compose down -v`
+remove também esse volume e seus dados; não deve ser usado como comando
+rotineiro de parada.
+
+As variáveis de inicialização do PostgreSQL são aplicadas quando o volume
+está vazio. Alterar a senha no `.env` não modifica automaticamente a senha
+de um banco já inicializado.
+
+### Estado da implementação
+
+A conexão com o banco foi validada utilizando PostgreSQL 17.11.
+
+As tabelas serão criadas por migrations do Sequelize. A configuração do
+backend, do frontend e os respectivos comandos de execução ainda estão
+em implementação.
+
+O desenvolvimento e os testes locais precedem a publicação na nuvem.
 
 ## Documentação da API
 
