@@ -13,16 +13,24 @@
     "db:check": "node scripts/check-database.js",
     "db:status": "node scripts/migrate.js status",
     "db:migrate": "node scripts/migrate.js up",
-    "test": "node --test"
+    "test": "node --test",
+    "auth:setup": "node scripts/setup-auth.js",
+    "admin:create": "node scripts/create-admin.js",
+    "test:integration": "node scripts/integration-runner.js"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
+    "express-rate-limit": "^8.7.1",
     "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
     "pg": "^8.16.0",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.37.7",
-    "umzug": "^3.8.0"
+    "swagger-ui-express": "^5.0.1",
+    "umzug": "^3.8.0",
+    "zod": "^4.6.7"
   }
 }
