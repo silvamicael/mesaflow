@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { parseEnv } from '../src/config/parse-env.js';
-const base = { DB_NAME: 'test', DB_USER: 'test', DB_PASSWORD: 'senha_ficticia' };
+const base = { JWT_SECRET: 'a'.repeat(64), DB_NAME: 'test', DB_USER: 'test', DB_PASSWORD: 'senha_ficticia' };
 
 test('carrega ambiente local e preserva senha sem alteração', () => {
   const env = parseEnv({ ...base, DB_PASSWORD: '  senha  ' });

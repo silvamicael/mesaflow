@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 
 // Configuração fictícia: estes testes nunca abrem conexão real com PostgreSQL.
 Object.assign(process.env, {
-  NODE_ENV: 'test', HOST: '127.0.0.1', PORT: '3001',
+  JWT_SECRET: 'a'.repeat(64), NODE_ENV: 'test', HOST: '127.0.0.1', PORT: '3001',
   CLIENT_ORIGIN: 'http://localhost:5173',
   DB_NAME: 'test', DB_USER: 'test', DB_PASSWORD: 'senha_ficticia',
 });
